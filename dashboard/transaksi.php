@@ -94,6 +94,9 @@ if (!isset($_SESSION['admin'])) {
                   <th class="py-3 px-4 font-semibold uppercase tracking-wide text-xs">No Nota</th>
                   <th class="py-3 px-4 font-semibold uppercase tracking-wide text-xs">Tanggal</th>
                   <th class="py-3 px-4 font-semibold uppercase tracking-wide text-xs">Pelanggan</th>
+                  <th class="py-3 px-4 font-semibold uppercase tracking-wide text-xs">Tipe Pesanan</th>
+                  <th class="py-3 px-4 font-semibold uppercase tracking-wide text-xs">Pembayaran</th>
+                  <th class="py-3 px-4 font-semibold uppercase tracking-wide text-xs">Status</th>
                   <th class="py-3 px-4 font-semibold uppercase tracking-wide text-xs text-right">Total</th>
                   <th class="py-3 px-4 font-semibold uppercase tracking-wide text-xs text-center">Aksi</th>
                 </tr>
@@ -107,13 +110,19 @@ if (!isset($_SESSION['admin'])) {
                     ORDER BY t.id_transaksi DESC
                 ");
                 while ($data = mysqli_fetch_assoc($hasil)) {
+                  $status = isset($data['status']) ? $data['status'] : 'Pending';
+                  $kirim = isset($data['metode_kirim']) ? $data['metode_kirim'] : 'Ambil di Toko';
+                  $bayar = isset($data['metode_bayar']) ? $data['metode_bayar'] : 'Transfer Bank';
                 ?>
                   <tr class="border-b border-[#C9B89A]/20 hover:bg-[#D4A04E]/5 transition-all">
                     <td class="py-4 px-4 font-medium">TRX-<?= str_pad($data['id_transaksi'], 5, "0", STR_PAD_LEFT) ?></td>
                     <td class="py-4 px-4"><?= date('d M Y', strtotime($data['tanggal'])) ?></td>
                     <td class="py-4 px-4"><?= htmlspecialchars($data['name'] ?? $data['username'] ?? 'User Dihapus') ?></td>
+                    <td class="py-4 px-4"><?= htmlspecialchars($kirim) ?></td>
+                    <td class="py-4 px-4"><?= htmlspecialchars($bayar) ?></td>
+                    <td class="py-4 px-4 font-medium text-amber-600"><?= htmlspecialchars($status) ?></td>
                     <td class="py-4 px-4 text-right font-bold text-[#2D3F31]">Rp <?= number_format($data['total_harga'], 0, ',', '.') ?></td>
-                    <td class="py-4 px-4 text-center">
+                    <td class="py-4 px-4 text-center flex flex-col gap-2">
                       <a href="../cetak.php?id=<?= $data['id_transaksi'] ?>" target="_blank" class="bg-blue-500/10 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-all">Lihat Nota</a>
                     </td>
                   </tr>

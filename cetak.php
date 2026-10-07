@@ -94,6 +94,14 @@ $trx = mysqli_fetch_assoc($queryTrx);
                 <td><strong>Alamat</strong></td>
                 <td>: <?= htmlspecialchars($trx['alamat'] ?? '-') ?></td>
             </tr>
+            <tr>
+                <td><strong>Tipe Pesanan</strong></td>
+                <td>: <?= htmlspecialchars($trx['metode_kirim'] ?? 'Dine-in') ?></td>
+            </tr>
+            <tr>
+                <td><strong>Pembayaran</strong></td>
+                <td>: <?= htmlspecialchars($trx['metode_bayar'] ?? 'Transfer Bank') ?></td>
+            </tr>
         </table>
     </div>
 

@@ -96,7 +96,10 @@ CREATE TABLE `tb_transaksi` (
   `id_transaksi` int NOT NULL,
   `id_pelanggan` int NOT NULL,
   `tanggal` date NOT NULL,
-  `total_harga` int NOT NULL
+  `total_harga` int NOT NULL,
+  `metode_bayar` varchar(50) DEFAULT 'Transfer',
+  `metode_kirim` varchar(50) DEFAULT 'Ambil di Toko',
+  `status` varchar(50) DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------

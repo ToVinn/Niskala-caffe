@@ -77,15 +77,19 @@ $id_user = $_SESSION['id_user'];
                 <tr class="border-b-2 border-twig/30 text-mist text-xs uppercase tracking-wider">
                   <th class="py-3 px-4 font-semibold">No Nota</th>
                   <th class="py-3 px-4 font-semibold text-center">Tanggal</th>
+                  <th class="py-3 px-4 font-semibold text-center">Status</th>
                   <th class="py-3 px-4 font-semibold text-right">Total Belanja</th>
                   <th class="py-3 px-4 font-semibold text-center">Nota</th>
                 </tr>
               </thead>
               <tbody>
-                <?php while ($trx = mysqli_fetch_assoc($queryTrx)): ?>
+                <?php while ($trx = mysqli_fetch_assoc($queryTrx)): 
+                  $status = isset($trx['status']) ? $trx['status'] : 'Pending';
+                ?>
                   <tr class="border-b border-twig/20 hover:bg-sand/20 transition-colors">
                     <td class="py-4 px-4 font-semibold text-canopy">TRX-<?= str_pad($trx['id_transaksi'], 5, "0", STR_PAD_LEFT) ?></td>
                     <td class="py-4 px-4 text-center font-medium"><?= date('d M Y', strtotime($trx['tanggal'])) ?></td>
+                    <td class="py-4 px-4 text-center font-medium text-amber-600"><?= htmlspecialchars($status) ?></td>
                     <td class="py-4 px-4 text-right font-bold text-canopy">Rp <?= number_format($trx['total_harga'], 0, ',', '.') ?></td>
                     <td class="py-4 px-4 text-center">
                       <a href="cetak.php?id=<?= $trx['id_transaksi'] ?>" class="inline-block border border-moss text-moss hover:bg-moss hover:text-cream px-4 py-1.5 rounded-full font-semibold text-xs transition-colors" target="_blank">Lihat Nota</a>

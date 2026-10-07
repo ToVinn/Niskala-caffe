@@ -52,8 +52,12 @@ if (isset($_GET["aksi"])) {
 
         // Insert tb_transaksi
         $tanggal = date("Y-m-d");
-        $stmtTrx = mysqli_prepare($koneksi, "INSERT INTO tb_transaksi (tanggal, id_pelanggan, total_harga) VALUES (?, ?, ?)");
-        mysqli_stmt_bind_param($stmtTrx, "sii", $tanggal, $id_user, $total);
+        $metode_kirim = isset($_POST['metode_kirim']) ? $_POST['metode_kirim'] : 'Ambil di Toko';
+        $metode_bayar = isset($_POST['metode_bayar']) ? $_POST['metode_bayar'] : 'Transfer Bank';
+        $status = 'Pending';
+        
+        $stmtTrx = mysqli_prepare($koneksi, "INSERT INTO tb_transaksi (tanggal, id_pelanggan, total_harga, metode_bayar, metode_kirim, status) VALUES (?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmtTrx, "siisss", $tanggal, $id_user, $total, $metode_bayar, $metode_kirim, $status);
         if(mysqli_stmt_execute($stmtTrx)) {
             $id_transaksi = mysqli_insert_id($koneksi);
 
@@ -170,15 +174,36 @@ if (isset($_GET["aksi"])) {
             </table>
           </div>
 
-          <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-6 bg-sand/30 p-6 rounded-2xl border border-twig/30">
-            <div>
-              <p class="text-sm uppercase tracking-wider text-mist font-semibold">Total Pembayaran</p>
-              <p class="font-anton text-3xl text-amber">Rp <?= number_format($total, 0, ',', '.') ?></p>
+          <form action="keranjang.php?aksi=beli" method="POST" class="mt-8 flex flex-col md:flex-row justify-between items-center gap-6 bg-sand/30 p-6 rounded-2xl border border-twig/30">
+            <div class="flex flex-col gap-4 w-full md:w-auto">
+              <div>
+                <p class="text-sm uppercase tracking-wider text-mist font-semibold">Total Pembayaran</p>
+                <p class="font-anton text-3xl text-amber">Rp <?= number_format($total, 0, ',', '.') ?></p>
+              </div>
             </div>
-            <a href="keranjang.php?aksi=beli" class="w-full md:w-auto bg-moss hover:bg-canopy text-cream px-8 py-3.5 rounded-full font-bold uppercase tracking-widest text-sm transition-all shadow-lg hover:-translate-y-1 text-center">
-              Checkout Pesanan
-            </a>
-          </div>
+            
+            <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto items-end">
+              <div class="w-full md:w-48">
+                <label class="block text-sm font-semibold text-canopy mb-1">Tipe Pesanan</label>
+                <select name="metode_kirim" class="w-full px-4 py-2 rounded-lg border border-twig/50 bg-white text-sm focus:outline-none focus:border-moss" required>
+                  <option value="Dine-in (Makan di Tempat)">Dine-in (Makan di Tempat)</option>
+                  <option value="Takeaway (Bungkus)">Takeaway (Bungkus)</option>
+                </select>
+              </div>
+              
+              <div class="w-full md:w-48">
+                <label class="block text-sm font-semibold text-canopy mb-1">Metode Pembayaran</label>
+                <select name="metode_bayar" class="w-full px-4 py-2 rounded-lg border border-twig/50 bg-white text-sm focus:outline-none focus:border-moss" required>
+                  <option value="Bayar di Kasir">Bayar di Kasir</option>
+                  <option value="E-Wallet (QRIS/Dana/Ovo)">E-Wallet (QRIS/Dana/Ovo)</option>
+                </select>
+              </div>
+
+              <button type="submit" class="w-full md:w-auto bg-moss hover:bg-canopy text-cream px-8 py-2.5 rounded-lg font-bold uppercase tracking-widest text-sm transition-all shadow-lg hover:-translate-y-1 text-center h-full">
+                Checkout
+              </button>
+            </div>
+          </form>
 
         <?php else: ?>
           <div class="text-center py-16">

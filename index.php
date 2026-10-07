@@ -87,26 +87,102 @@ include 'koneksi.php';
     </div>
   </nav>
 
-  <!-- Hero Section -->
+  <!-- Carousel Hero Section -->
   <header class="relative overflow-hidden pt-24 pb-32">
     <!-- Background Decor -->
     <div class="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-dew/20 rounded-full blur-3xl pointer-events-none"></div>
     <div class="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[500px] h-[500px] bg-amber/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-      <p class="font-poppins text-amber font-bold tracking-[0.2em] uppercase text-sm mb-4">Taste Everything</p>
-      <h1 class="font-anton text-6xl md:text-8xl text-canopy uppercase tracking-wide mb-6">
-        Kopi & <span class="text-moss">Cerita</span>
-      </h1>
-      <p class="max-w-2xl mx-auto text-mist md:text-lg mb-10 leading-relaxed">
-        Temukan racikan kopi terbaik dan berbagai menu andalan kami yang siap menemani momen santaimu. Pesan sekarang dan rasakan kehangatannya.
-      </p>
-      <a href="#menu" class="inline-flex items-center gap-2 bg-canopy hover:bg-moss text-cream px-8 py-4 rounded-full font-bold uppercase tracking-widest text-sm transition-all shadow-xl shadow-canopy/20 hover:scale-105">
-        Lihat Menu
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-      </a>
+    <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+      <!-- Carousel Container -->
+      <div id="carousel" class="relative overflow-hidden rounded-2xl bg-white/40 border border-twig/20 shadow-xl">
+        <div id="carousel-inner" class="flex transition-transform duration-500 ease-in-out">
+          
+          <?php
+          $queryCarousel = mysqli_query($koneksi, "SELECT * FROM tb_produk WHERE stok > 0 ORDER BY RAND() LIMIT 3");
+          $slidesCount = mysqli_num_rows($queryCarousel);
+          if ($slidesCount > 0):
+            while ($slide = mysqli_fetch_assoc($queryCarousel)):
+          ?>
+          <!-- Dynamic Slide -->
+          <div class="min-w-full flex-shrink-0 flex flex-col md:flex-row items-center p-8 md:p-12 gap-8 text-center md:text-left">
+            <div class="flex-1 md:w-1/2">
+              <p class="font-poppins text-amber font-bold tracking-[0.2em] uppercase text-sm mb-4">Rekomendasi Kami</p>
+              <h1 class="font-anton text-5xl md:text-6xl text-canopy uppercase tracking-wide mb-4 line-clamp-2">
+                <?= htmlspecialchars($slide['nama_produk']) ?>
+              </h1>
+              <p class="font-poppins text-2xl text-moss font-bold mb-4">Rp <?= number_format($slide['harga'], 0, ',', '.') ?></p>
+              <p class="text-mist md:text-lg mb-8 leading-relaxed line-clamp-3">
+                <?= htmlspecialchars($slide['deskripsi'] ?: 'Nikmati racikan spesial dari Niskalla Caffe. Dibuat dengan bahan premium untuk cita rasa tak terlupakan.') ?>
+              </p>
+              <a href="detail.php?id=<?= $slide['id'] ?>" class="inline-flex items-center gap-2 bg-canopy hover:bg-moss text-cream px-8 py-4 rounded-full font-bold uppercase tracking-widest text-sm transition-all shadow-xl shadow-canopy/20 hover:scale-105">
+                Lihat Detail
+              </a>
+            </div>
+            <div class="flex-1 md:w-1/2 flex justify-center">
+              <div class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white/50 shadow-2xl">
+                <img src="assets/img/<?= htmlspecialchars($slide['poto']) ?>" alt="<?= htmlspecialchars($slide['nama_produk']) ?>" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/400x300/E8DCC4/6B6357?text=No+Image'">
+              </div>
+            </div>
+          </div>
+          <?php 
+            endwhile;
+          else:
+          ?>
+          <!-- Default Slide if no products -->
+          <div class="min-w-full flex-shrink-0 flex flex-col md:flex-row items-center p-8 md:p-12 gap-8 text-center md:text-left">
+            <div class="flex-1">
+              <p class="font-poppins text-amber font-bold tracking-[0.2em] uppercase text-sm mb-4">Taste Everything</p>
+              <h1 class="font-anton text-5xl md:text-7xl text-canopy uppercase tracking-wide mb-6">
+                Kopi & <span class="text-moss">Cerita</span>
+              </h1>
+              <p class="text-mist md:text-lg mb-8 leading-relaxed">
+                Temukan racikan kopi terbaik dan berbagai menu andalan kami yang siap menemani momen santaimu. Pesan sekarang dan rasakan kehangatannya.
+              </p>
+              <a href="#menu" class="inline-flex items-center gap-2 bg-canopy hover:bg-moss text-cream px-8 py-4 rounded-full font-bold uppercase tracking-widest text-sm transition-all shadow-xl shadow-canopy/20 hover:scale-105">
+                Lihat Menu
+              </a>
+            </div>
+          </div>
+          <?php endif; ?>
+
+        </div>
+
+        <!-- Carousel Controls -->
+        <button id="prevBtn" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-canopy/80 text-cream rounded-full flex items-center justify-center hover:bg-canopy transition-colors">
+          ❮
+        </button>
+        <button id="nextBtn" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-canopy/80 text-cream rounded-full flex items-center justify-center hover:bg-canopy transition-colors">
+          ❯
+        </button>
+      </div>
     </div>
   </header>
+
+  <script>
+    const inner = document.getElementById('carousel-inner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentIndex = 0;
+    const slidesCount = <?= $slidesCount > 0 ? $slidesCount : 1 ?>;
+
+    function showSlide(index) {
+      if (slidesCount <= 1) return;
+      if (index < 0) index = slidesCount - 1;
+      if (index >= slidesCount) index = 0;
+      inner.style.transform = `translateX(-${index * 100}%)`;
+      currentIndex = index;
+    }
+
+    if(slidesCount > 1) {
+      prevBtn.addEventListener('click', () => showSlide(currentIndex - 1));
+      nextBtn.addEventListener('click', () => showSlide(currentIndex + 1));
+      setInterval(() => showSlide(currentIndex + 1), 5000);
+    } else {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    }
+  </script>
 
   <!-- Menu Section -->
   <section id="menu" class="py-24 bg-white/50 border-t border-twig/20">
