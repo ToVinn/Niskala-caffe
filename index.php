@@ -46,20 +46,203 @@ include 'koneksi.php';
       },
     };
   </script>
+  <style>
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+  </style>
 </head>
-<body class="bg-cream text-charcoal font-inter antialiased">
+<body class="bg-cream text-charcoal font-inter antialiased overflow-x-hidden">
+
+  <!-- MOBILE UI (Home Screen) -->
+  <div class="md:hidden pb-24 font-inter bg-cream min-h-screen">
+    <!-- Top Header -->
+    <div class="px-5 pt-8 pb-4">
+      <h1 class="text-3xl font-bold mb-6 text-canopy">Good Morning,<br><span class="text-amber"><?= isset($_SESSION['pelanggan']) ? htmlspecialchars($_SESSION['pelanggan']) : 'Pelanggan' ?></span></h1>
+      
+      <!-- Search -->
+      <form method="GET" action="index.php" class="relative mb-6">
+        <input type="text" name="search" placeholder="Search your favorite coffee..." class="w-full bg-white border border-twig/30 rounded-full py-3 pl-12 pr-10 focus:outline-none focus:border-moss text-sm shadow-sm">
+        <svg class="w-5 h-5 absolute left-4 top-3.5 text-mist" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <button type="submit" class="absolute right-4 top-3.5 text-mist hover:text-moss transition">
+           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Categories -->
+    <?php
+    $kat_mobile = isset($_GET['kategori_search']) ? $_GET['kategori_search'] : '';
+    $search_mobile = isset($_GET['search']) ? $_GET['search'] : '';
+    $is_searching_mobile = ($kat_mobile != '' || $search_mobile != '');
+    ?>
+    <div class="px-5 mb-6 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+      <div class="flex gap-3">
+        <a href="index.php" class="snap-start px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap flex flex-row items-center gap-2 border shadow-sm transition <?= ($kat_mobile == '') ? 'bg-moss text-cream border-moss' : 'border-twig/50 bg-white text-canopy hover:border-moss hover:bg-moss/5' ?>">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          All
+        </a>
+        <?php
+        $mobileKat = mysqli_query($koneksi, "SELECT * FROM tb_kategori LIMIT 4");
+        while($k = mysqli_fetch_array($mobileKat)):
+            $is_active = ($kat_mobile == $k['id_kategori']);
+        ?>
+        <a href="index.php?kategori_search=<?= $k['id_kategori'] ?>" class="snap-start px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap flex flex-row items-center gap-2 border transition shadow-sm <?= $is_active ? 'bg-moss text-cream border-moss' : 'border-twig/50 bg-white text-canopy hover:border-moss hover:bg-moss/5' ?>">
+           <svg class="w-5 h-5 <?= $is_active ? 'text-cream' : 'text-amber' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+           <?= htmlspecialchars($k['nama_kategori']) ?>
+        </a>
+        <?php endwhile; ?>
+      </div>
+    </div>
+
+    <?php if (!$is_searching_mobile): ?>
+    <!-- Popular Now -->
+    <div class="px-5 mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-canopy">Popular Now</h2>
+        <a href="index.php?search=" class="text-sm text-mist font-semibold">View all</a>
+      </div>
+      <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x snap-mandatory">
+        <?php
+        $populer = mysqli_query($koneksi, "SELECT * FROM tb_produk LIMIT 4");
+        while($p = mysqli_fetch_array($populer)):
+        ?>
+        <div class="snap-start min-w-[160px] max-w-[160px] bg-white rounded-2xl border border-twig/30 overflow-hidden shrink-0 shadow-sm relative flex flex-col">
+          <div class="h-32 bg-sand/30 relative">
+             <img src="assets/img/<?= htmlspecialchars($p['poto']) ?>" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/E8DCC4/6B6357?text=No+Image'">
+          </div>
+          <div class="p-3 flex flex-col flex-1">
+             <h3 class="font-bold text-sm text-canopy truncate"><?= htmlspecialchars($p['nama_produk']) ?></h3>
+             <p class="text-xs text-mist mb-3 truncate flex-1"><?= htmlspecialchars($p['deskripsi'] ?: 'Kopi nikmat Niskala') ?></p>
+             <div class="flex justify-between items-center mt-auto">
+                <span class="font-bold text-sm text-moss">Rp <?= number_format($p['harga'], 0, ',', '.') ?></span>
+                <a href="detail.php?id=<?= $p['id'] ?>" class="w-6 h-6 bg-amber text-white rounded-full flex items-center justify-center font-bold text-lg leading-none">+</a>
+             </div>
+          </div>
+        </div>
+        <?php endwhile; ?>
+      </div>
+    </div>
+
+    <!-- Special For You -->
+    <div class="px-5">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-canopy">Special For You</h2>
+        <a href="index.php?search=" class="text-sm text-mist font-semibold">View all</a>
+      </div>
+      <div class="flex flex-col gap-4">
+        <?php
+        $special = mysqli_query($koneksi, "SELECT * FROM tb_produk ORDER BY id DESC LIMIT 3");
+        while($p = mysqli_fetch_array($special)):
+        ?>
+        <a href="detail.php?id=<?= $p['id'] ?>" class="bg-white rounded-2xl border border-twig/30 p-3 flex gap-4 shadow-sm items-center">
+           <div class="w-20 h-20 bg-sand/30 rounded-xl overflow-hidden shrink-0">
+               <img src="assets/img/<?= htmlspecialchars($p['poto']) ?>" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/E8DCC4/6B6357?text=Img'">
+           </div>
+           <div class="flex-1 overflow-hidden">
+               <h3 class="font-bold text-base text-canopy truncate"><?= htmlspecialchars($p['nama_produk']) ?></h3>
+               <p class="text-xs text-mist mb-2 truncate">Racikan spesial untuk Anda.</p>
+               <span class="font-bold text-sm text-moss">Rp <?= number_format($p['harga'], 0, ',', '.') ?></span>
+           </div>
+        </a>
+        <?php endwhile; ?>
+      </div>
+    </div>
+    
+    <?php else: ?>
+    <!-- Search / Filter Results -->
+    <div class="px-5">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-canopy">Hasil Pencarian</h2>
+      </div>
+      <div class="flex flex-col gap-4">
+        <?php
+        $where_mobile = "1=1";
+        if ($search_mobile != '') {
+            $sm = mysqli_real_escape_string($koneksi, $search_mobile);
+            $where_mobile .= " AND nama_produk LIKE '%$sm%'";
+        }
+        if ($kat_mobile != '') {
+            $km = mysqli_real_escape_string($koneksi, $kat_mobile);
+            $where_mobile .= " AND id_kategori = '$km'";
+        }
+        
+        $queryHasil = mysqli_query($koneksi, "SELECT * FROM tb_produk WHERE $where_mobile");
+        
+        if(mysqli_num_rows($queryHasil) > 0):
+            while($p = mysqli_fetch_array($queryHasil)):
+        ?>
+        <a href="detail.php?id=<?= $p['id'] ?>" class="bg-white rounded-2xl border border-twig/30 p-3 flex gap-4 shadow-sm items-center">
+           <div class="w-20 h-20 bg-sand/30 rounded-xl overflow-hidden shrink-0">
+               <img src="assets/img/<?= htmlspecialchars($p['poto']) ?>" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/E8DCC4/6B6357?text=Img'">
+           </div>
+           <div class="flex-1 overflow-hidden">
+               <h3 class="font-bold text-base text-canopy truncate"><?= htmlspecialchars($p['nama_produk']) ?></h3>
+               <p class="text-xs text-mist mb-2 truncate"><?= htmlspecialchars($p['deskripsi'] ?: 'Kopi nikmat Niskala') ?></p>
+               <span class="font-bold text-sm text-moss">Rp <?= number_format($p['harga'], 0, ',', '.') ?></span>
+           </div>
+        </a>
+        <?php 
+            endwhile;
+        else:
+        ?>
+        <div class="text-center py-10 bg-white rounded-2xl border border-twig/30">
+          <p class="text-mist text-sm">Oops! Menu tidak ditemukan.</p>
+        </div>
+        <?php endif; ?>
+      </div>
+    </div>
+    <?php endif; ?>
+
+  </div>
+
+  <!-- Bottom Nav (Mobile Only) -->
+  <div class="md:hidden fixed bottom-0 left-0 w-full bg-cream border-t border-twig/30 flex justify-between px-8 py-2 z-50">
+     <a href="index.php" class="flex flex-col items-center text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span class="text-[10px] font-semibold">Home</span>
+     </a>
+     <a href="keranjang.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <span class="text-[10px] font-semibold">Order</span>
+     </a>
+     <?php if (isset($_SESSION['pelanggan'])): ?>
+     <a href="transaksi.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        <span class="text-[10px] font-semibold">Riwayat</span>
+     </a>
+     <?php else: ?>
+     <a href="login.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+        <span class="text-[10px] font-semibold">Login</span>
+     </a>
+     <?php endif; ?>
+     <a href="profil.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span class="text-[10px] font-semibold">Profile</span>
+     </a>
+  </div>
+
+  <!-- DESKTOP UI WRAPPER -->
+  <div class="hidden md:block">
 
   <!-- Navbar -->
   <nav class="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-twig/30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <!-- Logo -->
-        <a href="index.php" class="font-poppins font-bold lowercase text-3xl text-canopy tracking-tight">
+        <a href="index.php" class="font-poppins font-bold lowercase text-2xl md:text-3xl text-canopy tracking-tight">
           Niskalla<span class="text-amber">Caffe</span>
         </a>
         
         <!-- Menu -->
-        <div class="flex items-center gap-4">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-4">
           <?php if (isset($_SESSION['pelanggan'])): ?>
             <a href="transaksi.php" class="text-sm font-semibold text-mist hover:text-moss transition">Riwayat</a>
           <?php endif; ?>
@@ -76,11 +259,11 @@ include 'koneksi.php';
             <a href="dashboard/dasbor.php" class="text-sm font-semibold text-moss hover:text-canopy transition">Dashboard</a>
             <a href="logout.php" class="text-sm font-semibold text-rose hover:text-red-700 transition">Logout</a>
           <?php elseif (isset($_SESSION['pelanggan'])): ?>
-            <a href="profil.php" class="text-sm font-medium text-moss hover:text-canopy transition font-semibold">Halo, <?= htmlspecialchars($_SESSION['pelanggan']) ?></a>
+            <a href="profil.php" class="text-xs sm:text-sm font-medium text-moss hover:text-canopy transition font-semibold truncate max-w-[80px] sm:max-w-[150px] md:max-w-none inline-block align-bottom">Halo, <?= htmlspecialchars($_SESSION['pelanggan']) ?></a>
             <a href="logout.php" class="text-sm font-semibold text-rose hover:text-red-700 transition">Logout</a>
           <?php else: ?>
             <a href="login.php" class="text-sm font-semibold text-moss hover:text-canopy transition">Login</a>
-            <a href="register.php" class="bg-moss hover:bg-canopy text-cream px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all shadow-md shadow-moss/20 hover:shadow-lg hover:-translate-y-0.5">Daftar</a>
+            <a href="register.php" class="bg-moss hover:bg-canopy text-cream px-3 py-1.5 md:px-5 md:py-2.5 rounded-full text-xs md:text-sm font-semibold tracking-wide transition-all shadow-md shadow-moss/20 hover:shadow-lg hover:-translate-y-0.5">Daftar</a>
           <?php endif; ?>
         </div>
       </div>
@@ -108,7 +291,7 @@ include 'koneksi.php';
           <div class="min-w-full flex-shrink-0 flex flex-col md:flex-row items-center p-8 md:p-12 gap-8 text-center md:text-left">
             <div class="flex-1 md:w-1/2">
               <p class="font-poppins text-amber font-bold tracking-[0.2em] uppercase text-sm mb-4">Rekomendasi Kami</p>
-              <h1 class="font-anton text-5xl md:text-6xl text-canopy uppercase tracking-wide mb-4 line-clamp-2">
+              <h1 class="font-anton text-4xl sm:text-5xl md:text-6xl text-canopy uppercase tracking-wide mb-4 line-clamp-2">
                 <?= htmlspecialchars($slide['nama_produk']) ?>
               </h1>
               <p class="font-poppins text-2xl text-moss font-bold mb-4">Rp <?= number_format($slide['harga'], 0, ',', '.') ?></p>
@@ -133,7 +316,7 @@ include 'koneksi.php';
           <div class="min-w-full flex-shrink-0 flex flex-col md:flex-row items-center p-8 md:p-12 gap-8 text-center md:text-left">
             <div class="flex-1">
               <p class="font-poppins text-amber font-bold tracking-[0.2em] uppercase text-sm mb-4">Taste Everything</p>
-              <h1 class="font-anton text-5xl md:text-7xl text-canopy uppercase tracking-wide mb-6">
+              <h1 class="font-anton text-4xl sm:text-5xl md:text-7xl text-canopy uppercase tracking-wide mb-6">
                 Kopi & <span class="text-moss">Cerita</span>
               </h1>
               <p class="text-mist md:text-lg mb-8 leading-relaxed">
@@ -297,6 +480,8 @@ ORDER BY CASE WHEN k.id_kategori = 5 THEN 0 ELSE 1 END, k.id_kategori ASC");
       </div>
     </div>
   </footer>
+
+  </div>
 
 </body>
 </html>

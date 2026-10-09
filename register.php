@@ -75,7 +75,7 @@ if (isset($_POST['register'])) {
   </script>
 </head>
 
-<body class="min-h-screen flex items-center justify-center py-16 px-5" style="background: linear-gradient(180deg, #F5F0E1 0%, #E8DCC4 45%, #A8B89E 100%);">
+<body class="min-h-screen flex items-center justify-center py-16 px-5 overflow-x-hidden" style="background: linear-gradient(180deg, #F5F0E1 0%, #E8DCC4 45%, #A8B89E 100%);">
   
   <!-- Background decoration -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">

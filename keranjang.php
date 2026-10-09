@@ -114,18 +114,18 @@ if (isset($_GET["aksi"])) {
     };
   </script>
 </head>
-<body class="bg-cream text-charcoal font-inter min-h-screen flex flex-col">
+<body class="bg-cream text-charcoal font-inter min-h-screen flex flex-col overflow-x-hidden">
 
   <nav class="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-twig/30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
-      <a href="index.php" class="font-poppins font-bold lowercase text-3xl text-canopy tracking-tight">
+      <a href="index.php" class="font-poppins font-bold lowercase text-2xl md:text-3xl text-canopy tracking-tight">
         Niskalla<span class="text-amber">Caffe</span>
       </a>
       <a href="index.php" class="text-sm font-semibold text-mist hover:text-moss transition">Kembali ke Menu</a>
     </div>
   </nav>
 
-  <main class="flex-1 py-12 px-4">
+  <main class="flex-1 py-6 md:py-12 px-4 pb-28 md:pb-12">
     <div class="max-w-4xl mx-auto bg-white/70 backdrop-blur-sm rounded-[32px] border border-twig/30 shadow-xl overflow-hidden">
       
       <div class="p-8 border-b border-twig/30 bg-sand/30">
@@ -133,9 +133,9 @@ if (isset($_GET["aksi"])) {
         <p class="text-mist text-sm mt-1">Selesaikan pesanan kopi dan cemilanmu</p>
       </div>
 
-      <div class="p-8">
+      <div class="p-4 md:p-8">
         <?php if (!empty($_SESSION["cart"])): ?>
-          <div class="overflow-x-auto">
+          <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="border-b-2 border-twig/30 text-mist text-xs uppercase tracking-wider">
@@ -174,7 +174,28 @@ if (isset($_GET["aksi"])) {
             </table>
           </div>
 
-          <form action="keranjang.php?aksi=beli" method="POST" class="mt-8 flex flex-col md:flex-row justify-between items-center gap-6 bg-sand/30 p-6 rounded-2xl border border-twig/30">
+          <!-- CARD UI (Mobile) -->
+          <div class="md:hidden flex flex-col gap-4 mt-4">
+            <?php foreach ($_SESSION["cart"] as $key => $value):
+              $subtotal = $value["jumlah"] * $value["harga"];
+            ?>
+            <div class="flex gap-4 items-center bg-white border border-twig/30 p-3 rounded-2xl shadow-sm">
+              <div class="w-16 h-16 rounded-xl overflow-hidden bg-sand/50 border border-twig/30 flex-shrink-0">
+                <img src="assets/img/<?= htmlspecialchars($value['foto']) ?>" class="w-full h-full object-cover">
+              </div>
+              <div class="flex-1 overflow-hidden">
+                <h3 class="font-bold text-sm text-canopy truncate"><?= htmlspecialchars($value['nama']) ?></h3>
+                <p class="text-[11px] text-mist mt-0.5">Rp <?= number_format($value['harga'], 0, ',', '.') ?> x <?= $value['jumlah'] ?></p>
+                <p class="font-bold text-moss text-sm mt-1">Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
+              </div>
+              <a href="keranjang.php?aksi=hapus&id=<?= $value['id'] ?>" class="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full bg-rose/10 text-rose hover:bg-rose hover:text-white transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </a>
+            </div>
+            <?php endforeach; ?>
+          </div>
+
+          <form action="keranjang.php?aksi=beli" method="POST" class="mt-8 flex flex-col md:flex-row justify-between items-center gap-6 bg-sand/30 p-4 md:p-6 rounded-2xl border border-twig/30">
             <div class="flex flex-col gap-4 w-full md:w-auto">
               <div>
                 <p class="text-sm uppercase tracking-wider text-mist font-semibold">Total Pembayaran</p>
@@ -221,9 +242,31 @@ if (isset($_GET["aksi"])) {
     </div>
   </main>
 
-  <footer class="bg-canopy text-cream py-6 mt-auto text-center">
-    <p class="text-dew text-sm">© <?= date('Y') ?> Niskalla Caffe. Taste Everything.</p>
+  <footer class="bg-canopy text-cream py-6 mt-auto text-center hidden md:block">
+    <p class="text-dew text-sm">Ac <?= date('Y') ?> Niskalla Caffe. Taste Everything.</p>
   </footer>
+
+  <!-- Bottom Nav (Mobile Only) -->
+  <div class="md:hidden fixed bottom-0 left-0 w-full bg-cream border-t border-twig/30 flex justify-between px-8 py-2 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+     <a href="index.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span class="text-[10px] font-semibold">Home</span>
+     </a>
+     <a href="keranjang.php" class="flex flex-col items-center text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <span class="text-[10px] font-semibold">Order</span>
+     </a>
+     <?php if (isset($_SESSION['pelanggan'])): ?>
+     <a href="transaksi.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        <span class="text-[10px] font-semibold">Riwayat</span>
+     </a>
+     <?php endif; ?>
+     <a href="profil.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span class="text-[10px] font-semibold">Profile</span>
+     </a>
+  </div>
 
 </body>
 </html>

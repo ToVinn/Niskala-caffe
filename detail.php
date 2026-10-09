@@ -64,53 +64,58 @@ $poto = $data['poto'];
     };
   </script>
 </head>
-<body class="bg-cream text-charcoal font-inter min-h-screen flex flex-col">
+<body class="bg-cream text-charcoal font-inter min-h-screen flex flex-col overflow-x-hidden">
 
   <!-- Navbar -->
-  <nav class="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-twig/30">
+  <nav class="hidden md:block sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-twig/30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
-        <a href="index.php" class="font-poppins font-bold lowercase text-3xl text-canopy tracking-tight">
+        <a href="index.php" class="font-poppins font-bold lowercase text-2xl md:text-3xl text-canopy tracking-tight">
           Niskalla<span class="text-amber">Caffe</span>
         </a>
       </div>
     </div>
   </nav>
 
-  <main class="flex-1 py-16 px-4">
-    <div class="max-w-5xl mx-auto bg-white/70 backdrop-blur-sm rounded-[32px] border border-twig/30 p-8 shadow-xl">
-      <div class="flex flex-col md:flex-row gap-12 items-center">
+  <main class="flex-1 py-0 md:py-16 px-0 md:px-4 pb-28 md:pb-16">
+    <div class="max-w-5xl mx-auto md:bg-white/70 md:backdrop-blur-sm md:rounded-[32px] md:border md:border-twig/30 md:p-8 md:shadow-xl">
+      <div class="flex flex-col md:flex-row gap-0 md:gap-12 items-start md:items-center relative">
         
+        <!-- Tombol Kembali Mobile Float -->
+        <a href="index.php" class="md:hidden absolute top-4 left-4 z-10 w-10 h-10 bg-white/50 backdrop-blur-md rounded-full flex items-center justify-center text-canopy border border-white/50 shadow-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </a>
+
         <!-- Gambar -->
         <div class="w-full md:w-1/2">
-          <div class="rounded-[28px] overflow-hidden border-2 border-twig/30 bg-sand/50 shadow-inner">
+          <div class="md:rounded-[28px] overflow-hidden md:border-2 md:border-twig/30 bg-sand/50 md:shadow-inner aspect-square md:aspect-auto h-[350px] md:h-auto w-full relative rounded-b-[2rem]">
             <img 
               src="assets/img/<?= htmlspecialchars($poto) ?>" 
               alt="<?= htmlspecialchars($nama) ?>"
-              class="w-full aspect-square object-cover hover:scale-105 transition-transform duration-500"
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               onerror="this.src='https://placehold.co/500x500/E8DCC4/6B6357?text=Gambar+Kosong'"
             >
           </div>
         </div>
 
         <!-- Info Produk -->
-        <div class="w-full md:w-1/2">
-          <h1 class="font-anton text-4xl text-canopy uppercase tracking-wide mb-2">
+        <div class="w-full md:w-1/2 px-5 py-6 md:p-0">
+          <h1 class="font-anton text-3xl md:text-4xl text-canopy uppercase tracking-wide mb-2">
             <?= htmlspecialchars($nama) ?>
           </h1>
-          <p class="font-poppins text-3xl text-amber font-bold mb-6">
+          <p class="font-poppins text-2xl md:text-3xl text-amber font-bold mb-6">
             Rp <?= number_format($harga, 0, ',', '.') ?>
           </p>
           
           <div class="mb-8">
             <h3 class="text-sm uppercase tracking-[0.15em] text-mist font-semibold mb-2">Deskripsi Produk</h3>
-            <p class="text-charcoal leading-relaxed">
+            <p class="text-charcoal leading-relaxed text-sm md:text-base">
               <?= nl2br(htmlspecialchars($deskripsi ?: 'Belum ada deskripsi untuk produk ini.')) ?>
             </p>
           </div>
 
           <!-- Form Add To Cart -->
-          <form method="post" action="keranjang.php?id=<?= htmlspecialchars($id) ?>" class="bg-sand/30 p-6 rounded-[24px] border border-twig/30">
+          <form method="post" action="keranjang.php?id=<?= htmlspecialchars($id) ?>" class="hidden md:block bg-sand/30 p-6 rounded-[24px] border border-twig/30">
             <input type="hidden" name="hidden_poto" value="<?= htmlspecialchars($poto) ?>">
             <input type="hidden" name="hidden_nama" value="<?= htmlspecialchars($nama) ?>">
             <input type="hidden" name="hidden_harga" value="<?= htmlspecialchars($harga) ?>">
@@ -130,7 +135,25 @@ $poto = $data['poto'];
             </button>
           </form>
 
-          <div class="mt-6 text-center md:text-left">
+          <!-- Form Add To Cart Mobile Sticky -->
+          <div class="md:hidden fixed bottom-0 left-0 w-full bg-cream border-t border-twig/30 p-4 z-50 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)]">
+            <form method="post" action="keranjang.php?id=<?= htmlspecialchars($id) ?>" class="flex gap-3">
+              <input type="hidden" name="hidden_poto" value="<?= htmlspecialchars($poto) ?>">
+              <input type="hidden" name="hidden_nama" value="<?= htmlspecialchars($nama) ?>">
+              <input type="hidden" name="hidden_harga" value="<?= htmlspecialchars($harga) ?>">
+              
+              <input 
+                type="number" name="jumlah" value="1" min="1" 
+                class="w-16 rounded-xl border border-twig/50 bg-white px-2 py-3 text-center text-charcoal font-semibold focus:outline-none focus:border-moss"
+              >
+              
+              <button type="submit" name="add" class="flex-1 bg-moss hover:bg-canopy text-cream py-3 rounded-xl font-bold uppercase tracking-widest text-xs shadow-md shadow-moss/20">
+                + Keranjang
+              </button>
+            </form>
+          </div>
+
+          <div class="hidden md:block mt-6 text-center md:text-left">
             <a href="index.php" class="inline-flex items-center gap-2 text-sm text-mist hover:text-moss transition font-medium">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
               Kembali ke Menu
@@ -142,7 +165,7 @@ $poto = $data['poto'];
     </div>
   </main>
 
-  <footer class="bg-canopy text-cream py-8 mt-auto">
+  <footer class="bg-canopy text-cream py-8 mt-auto hidden md:block">
     <div class="text-center">
       <p class="text-dew text-sm">© <?= date('Y') ?> Niskalla Caffe. Taste Everything.</p>
     </div>

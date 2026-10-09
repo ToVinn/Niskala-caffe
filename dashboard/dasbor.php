@@ -202,7 +202,7 @@ if (isset($_POST['tambah'])) {
   <div class="flex min-h-screen">
 
     <!-- SIDEBAR -->
-    <aside class="w-64 bg-sand/80 backdrop-blur-sm border-r border-twig/30 flex-shrink-0 fixed h-full z-40">
+    <aside class="hidden md:block w-64 bg-sand/80 backdrop-blur-sm border-r border-twig/30 flex-shrink-0 fixed h-full z-40">
       <div class="flex flex-col h-full">
 
         <!-- Logo / Brand -->
@@ -278,17 +278,21 @@ if (isset($_POST['tambah'])) {
       </div>
     </aside>
 
-    <main class="flex-1 ml-64">
-      <header class="sticky top-0 z-30 bg-cream/90 backdrop-blur-md border-b border-twig/30 px-8 py-4">
+    <main class="flex-1 md:ml-64 pb-24 md:pb-0 w-full overflow-x-hidden">
+      <header class="sticky top-0 z-30 bg-cream/90 backdrop-blur-md border-b border-twig/30 px-4 md:px-8 py-4">
         <div class="flex items-center justify-between">
+          <div class="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            <div class="md:hidden mb-2 border-b border-twig/30 pb-2">
+              <a href="../index.php" class="font-poppins font-bold lowercase text-xl text-canopy">Niskalla<span class="text-amber">Caffe</span></a>
+            </div>
           <div>
             <h1 class="font-anton text-2xl uppercase tracking-wide text-canopy">Dashboard</h1>
             <p class="text-xs text-mist mt-0.5">Kelola produk dan data</p>
           </div>
         </div>
       </header>
-      <div class="p-8">
-        <div class="bg-white/70 backdrop-blur-sm rounded-[28px] border border-twig/30 p-8 shadow-lg niskala-card mb-8">
+      <div class="p-4 md:p-8">
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl md:rounded-[28px] border border-twig/30 p-4 md:p-8 shadow-lg niskala-card mb-8">
           <div class="flex items-center gap-3 mb-6">
             <div class="w-10 h-10 rounded-full bg-moss/10 flex items-center justify-center">
               <svg class="w-5 h-5 text-moss" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
@@ -374,22 +378,20 @@ if (isset($_POST['tambah'])) {
           </form>
         </div>
 
-        <div class="bg-white/70 backdrop-blur-sm rounded-[28px] border border-twig/30 overflow-hidden shadow-lg niskala-card max-w-6xl mx-auto mt-8">
-
-          <div class="p-6 border-b border-twig/30 flex items-center justify-between flex-wrap gap-4">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-amber/10 flex items-center justify-center">
-                <svg class="w-5 h-5 text-amber" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl md:rounded-[28px] border border-twig/30 overflow-hidden shadow-lg niskala-card max-w-6xl mx-auto mt-8">
+  
+            <div class="p-4 md:p-6 border-b border-twig/30 flex items-center justify-between flex-wrap gap-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-amber/10 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-amber" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="font-anton text-lg uppercase tracking-wide text-canopy">Data Produk</h2>
+                </div>
               </div>
-              <div>
-                <h2 class="font-anton text-lg uppercase tracking-wide text-canopy">Data Produk</h2>
-                <p class="text-xs text-mist">Semua produk yang terdaftar</p>
-              </div>
-            </div>
-            
-            <form method="GET" action="dasbor.php" class="flex items-center gap-2">
+              <form method="GET" action="dasbor.php" class="flex flex-col md:flex-row md:items-center gap-2 w-full">
               <select name="kategori_search" class="niskala-input px-4 py-2 rounded-full border border-twig bg-kraft/50 text-sm text-charcoal focus:outline-none focus:border-moss transition-all">
                 <option value="">Semua Kategori</option>
                 <?php
@@ -401,7 +403,7 @@ if (isset($_POST['tambah'])) {
                 ?>
               </select>
               <div class="relative">
-                <input type="text" name="search" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>" placeholder="Cari produk..." class="niskala-input pl-10 pr-4 py-2 rounded-full border border-twig bg-kraft/50 text-sm text-charcoal focus:outline-none focus:border-moss transition-all w-48 sm:w-64">
+                <input type="text" name="search" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>" placeholder="Cari produk..." class="niskala-input pl-10 pr-4 py-2 rounded-full border border-twig bg-kraft/50 text-sm text-charcoal focus:outline-none focus:border-moss transition-all w-full md:w-64">
                 <div class="absolute left-3 top-1/2 -translate-y-1/2 text-mist">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -412,7 +414,7 @@ if (isset($_POST['tambah'])) {
             </form>
           </div>
 
-          <div class="p-6 overflow-x-auto">
+          <div class="p-4 md:p-6 overflow-x-auto">
             <table class="w-full text-sm text-left border-collapse">
               <thead>
                 <tr class="border-b-2 border-twig/30">
@@ -468,7 +470,7 @@ if (isset($_POST['tambah'])) {
                     </tr>
                 <?php } ?>
               </tbody>
-            </table>
+            </table></div>
           </div>
         </div>
       </div>
@@ -498,6 +500,28 @@ if (isset($_POST['tambah'])) {
     }
   </script>
 
+  <div class="md:hidden fixed bottom-0 left-0 w-full bg-cream border-t border-twig/30 flex justify-between px-6 py-2 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+     <a href="dasbor.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+        <span class="text-[10px] font-semibold">Produk</span>
+     </a>
+     <a href="transaksi.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        <span class="text-[10px] font-semibold">Transaksi</span>
+     </a>
+     <a href="customers.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+        <span class="text-[10px] font-semibold">Pelanggan</span>
+     </a>
+     <a href="aktivitas.php" class="flex flex-col items-center text-mist hover:text-canopy">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span class="text-[10px] font-semibold">Aktivitas</span>
+     </a>
+     <a href="../logout.php" class="flex flex-col items-center text-rose hover:text-red-700">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+        <span class="text-[10px] font-semibold">Logout</span>
+     </a>
+  </div>
 </body>
 
 </html>
